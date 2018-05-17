@@ -1,0 +1,6 @@
+Hi <%= @user.name %>!
+
+Welcome to PubGamer :) To confirm your registration, please click the url below.
+
+<%= api_v1_confirm_email_url(@user) %>
+<%= @user.confirmation_link %>

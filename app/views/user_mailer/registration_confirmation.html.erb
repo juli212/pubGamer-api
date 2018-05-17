@@ -1,0 +1,7 @@
+<div>
+	<p>Hi <%= @user.name %>!</p>
+
+	<p>Welcome to PubGamer :) To confirm your registration, please click the url below.</p>
+
+	<p><a href="<%= @user.confirmation_link %>"><%= @user.confirmation_link %></a></p>
+</div>
