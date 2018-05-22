@@ -85,7 +85,8 @@ class Venue < ApplicationRecord
       lat: self.lat,
       lng: self.lng,
       avg_rating: self.avg_rating,
-      games: self.games_for_json
+      games: self.games_for_json,
+      num_of_ratings: self.reviews.length
     }
   end
 

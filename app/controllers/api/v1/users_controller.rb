@@ -15,14 +15,24 @@ module Api::V1
       @user.encrypt_password(user_params[:password], user_params[:password_confirmation])
       # @user.image = Image.new(photo: user_params[:image])
       if @user.password_hash?
-          binding.pry
-          @user.build_image(photo: user_params[:image]) if user_params[:image] && user_params[:image] != 'null'
+          # binding.pry
+          # @user.build_image(photo: user_params[:image]) if user_params[:image] && user_params[:image] != 'null'
         if @user.save
-          # puts 'Save'
           UserMailer.registration_confirmation(@user).deliver
         end
       end
     	render json: @user.custom_json
+    end
+
+    def update
+      user = User.find_by(id: params[:id])
+      user.update_attributes(user_params)
+      user.build_image(photo: user_params[:image]) if user_params[:image] && user_params[:image] != 'null'
+      if @user.save
+        render json: user.custom_json
+      else
+        update_failed
+      end
     end
 
 
@@ -49,6 +59,10 @@ module Api::V1
 
     def user_params
     	params.require(:user).permit(:id, :name, :email, :birthday, :bio, :password, :password_confirmation, :image)
+    end
+
+    def update_failed
+      render json: { errors: [ {detail: 'Update Failed'}]}, status: 500
     end
 
   end
