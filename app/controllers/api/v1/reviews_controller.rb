@@ -10,7 +10,7 @@ module Api::V1
     	# binding.pry
       render json: reviews,
       	only: [:id, :content, :rating, :day],
-      	methods: [:display_date],
+      	methods: [:numerical_date],
       	include: {
       		vibes: { only: [:name, :id]}
       	}
@@ -28,7 +28,7 @@ module Api::V1
 	  	# binding.pry
 	  	render json: review,
 	  		only: [:id, :content, :rating, :day],
-	  		methods: [:display_date],
+	  		methods: [:numerical_date],
 	  		include: {
 	  			vibes: { only: [:name, :id]}
 	  		}

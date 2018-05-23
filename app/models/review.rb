@@ -11,6 +11,10 @@ class Review < ApplicationRecord
 		self.created_at.localtime.ctime
 	end
 
+	def numerical_date
+		self.created_at.strftime("%b %d, '%y")
+	end
+
 	def author
 		
 	end
