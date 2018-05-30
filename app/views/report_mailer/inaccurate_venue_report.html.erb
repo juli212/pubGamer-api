@@ -3,7 +3,7 @@
 
 <p>Reported by user with id: <%= @user.id %></p>
 
-<p>Venue: <a href="http://localhost:3000/venues/#{@venue.id}" ><%=@venue.name %></a></p>
+<p>Venue: <%= link_to "#{@venue.name}", "http://localhost:3000/venues/#{@venue.id}"%></p>
 
 <p><%= @message %></p>
 </div>
