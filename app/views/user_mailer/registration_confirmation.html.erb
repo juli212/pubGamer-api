@@ -1,7 +1,8 @@
 <div>
-	<p>Hi <%= @user.name %>!</p>
+	<p>Hello!</p>
 
 	<p>Welcome to PubGamer :) To confirm your registration, please click the url below.</p>
 
-	<p><a href="<%= @user.confirmation_link %>"><%= @user.confirmation_link %></a></p>
+	<p><%= link_to 'confirm email', "http://#{@user.confirmation_link}" %></p>
+	<p>You can also copy and paste this address into a browser to confirm: <%= @user.confirmation_link %></p>
 </div>
