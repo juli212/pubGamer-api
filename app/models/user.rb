@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   has_many :favorites, through: :user_venues, source: :venue
   has_many :user_events
   has_many :events, through: :user_events
-  has_many :user_reports
+  has_many :reports
 
   has_one :image, as: :imageable, dependent: :destroy
   accepts_nested_attributes_for :image

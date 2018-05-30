@@ -7,6 +7,7 @@ class Venue < ApplicationRecord
 	has_many :venue_games
 	has_many :games, through: :venue_games
 	has_many :images, as: :imageable, dependent: :destroy
+	has_many :reports
 	accepts_nested_attributes_for :images
 
 	validates :name, :address, :lat, :lng, :place_id, :user_id, presence: true

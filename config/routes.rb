@@ -7,6 +7,8 @@ Rails.application.routes.draw do
       	resources :reviews, only: [:create, :index] do
       		resources :vibes, only: [:index]
       	end
+        resources :reports, only: [:create],
+          path: '/report_inaccurate', to: 'reports#create_inaccurate' #can make another same way
       	# resources :events, only: [:index]
       end
 
@@ -29,6 +31,8 @@ Rails.application.routes.draw do
 		  resources :sessions, only: [:create] do
         delete :destroy, on: :collection
       end
+
+
 
 		  resources :confirm_email, only: [:show], path: '/users/confirm_email'
 
