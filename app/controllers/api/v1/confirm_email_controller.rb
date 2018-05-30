@@ -7,11 +7,21 @@ module Api::V1
       user = User.find_by(confirmation_token: params[:id])
       if user
         user.confirm_email
+        email_confirmed
+      else
+        email_confirmation_failed
       end
-      render json: user,
-      	only: [:id, :email_confirmed]
-      	# include: ['favorites']
     end
   
+    private
+
+    def email_confirmation_failed
+        render json: { errors: [ {detail: 'Email authentication failed'}]}, status: 400
+    end
+
+    def email_confirmed
+      render json: {}, status: 200
+    end
+
   end
 end

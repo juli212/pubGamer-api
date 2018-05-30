@@ -16,10 +16,10 @@ ActiveRecord::Schema.define(version: 20180503221020) do
   enable_extension "plpgsql"
 
   create_table "comments", force: :cascade do |t|
-    t.text "body"
-    t.boolean "deleted", default: false
-    t.integer "event_id"
-    t.integer "user_id"
+    t.text "body", null: false
+    t.boolean "deleted", default: false, null: false
+    t.integer "event_id", null: false
+    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 20180503221020) do
   end
 
   create_table "games", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -63,26 +63,19 @@ ActiveRecord::Schema.define(version: 20180503221020) do
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
   end
 
-  create_table "neighborhoods", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "review_vibes", force: :cascade do |t|
-    t.integer "review_id"
-    t.integer "vibe_id"
+    t.integer "review_id", null: false
+    t.integer "vibe_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "reviews", force: :cascade do |t|
     t.text "content"
-    t.string "day"
-    t.integer "rating"
-    t.boolean "deleted", default: false
-    t.integer "venue_id"
-    t.integer "user_id"
+    t.integer "rating", null: false
+    t.boolean "deleted", default: false, null: false
+    t.integer "venue_id", null: false
+    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -95,19 +88,19 @@ ActiveRecord::Schema.define(version: 20180503221020) do
   end
 
   create_table "user_venues", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "venue_id"
+    t.integer "user_id", null: false
+    t.integer "venue_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
+    t.date "birthday"
     t.text "bio"
     t.string "name"
-    t.string "email"
-    t.date "birthday"
-    t.string "password_hash"
-    t.boolean "deleted", default: false
+    t.string "password_hash", null: false
+    t.string "email", null: false
+    t.boolean "deleted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "auth_token"
@@ -118,28 +111,27 @@ ActiveRecord::Schema.define(version: 20180503221020) do
   end
 
   create_table "venue_games", force: :cascade do |t|
-    t.integer "game_id"
-    t.integer "venue_id"
+    t.integer "game_id", null: false
+    t.integer "venue_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_id", "venue_id"], name: "index_venue_games_on_game_id_and_venue_id", unique: true
   end
 
   create_table "venues", force: :cascade do |t|
-    t.string "name"
-    t.string "address"
-    t.string "lat"
-    t.string "lng"
-    t.string "place_id"
-    t.boolean "deleted", default: false
-    t.integer "neighborhood_id"
-    t.integer "user_id", default: 1
+    t.string "name", null: false
+    t.string "address", null: false
+    t.string "lat", null: false
+    t.string "lng", null: false
+    t.string "place_id", null: false
+    t.boolean "deleted", default: false, null: false
+    t.integer "user_id", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "vibes", force: :cascade do |t|
-    t.string "name"
+    t.string "name", limit: 20, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

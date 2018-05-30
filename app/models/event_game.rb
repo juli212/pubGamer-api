@@ -1,5 +1,5 @@
 class EventGame < ApplicationRecord
-	belongs_to :event 
-	belongs_to :game
+	belongs_to :event, null: false
+	belongs_to :game, null: false
 
 end

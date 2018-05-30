@@ -1,8 +1,8 @@
 class CreateVenueGames < ActiveRecord::Migration[5.1]
   def change
     create_table :venue_games do |t|
-      t.integer :game_id
-      t.integer :venue_id
+      t.integer :game_id, null: false
+      t.integer :venue_id, null: false
 
       t.timestamps
     end

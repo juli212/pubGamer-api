@@ -9,7 +9,7 @@ module Api::V1
     	reviews = Review.where(venue_id: params[:venue_id])
     	# binding.pry
       render json: reviews,
-      	only: [:id, :content, :rating, :day],
+      	only: [:id, :content, :rating, :day, :user_id],
       	methods: [:numerical_date],
       	include: {
       		vibes: { only: [:name, :id]}
@@ -27,7 +27,7 @@ module Api::V1
 	  	end
 	  	# binding.pry
 	  	render json: review,
-	  		only: [:id, :content, :rating, :day],
+	  		only: [:id, :content, :rating, :day, :user_id],
 	  		methods: [:numerical_date],
 	  		include: {
 	  			vibes: { only: [:name, :id]}

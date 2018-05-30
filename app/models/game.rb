@@ -4,6 +4,11 @@ class Game < ApplicationRecord
 	has_many :event_games
 	has_many :events, through: :event_games
 
+	validates :name, presence: true
+	validates :name, uniqueness: true
+
+	validates_length_of :name, maximum: 30, message: 'over character limit'
+
 
 	def self.most_used(limit)
 		a = []

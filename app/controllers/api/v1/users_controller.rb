@@ -6,7 +6,11 @@ module Api::V1
 
     def show
       user = User.find_by(id: params[:id])
-      render json: user.custom_json
+      if user
+        render json: user.custom_json
+      else
+        no_user_found
+      end
     end
 
 
@@ -14,15 +18,15 @@ module Api::V1
       @user = User.new(user_params)
       @user.encrypt_password(user_params[:password], user_params[:password_confirmation])
       # @user.image = Image.new(photo: user_params[:image])
-      if @user.password_hash?
-          # binding.pry
-          # @user.build_image(photo: user_params[:image]) if user_params[:image] && user_params[:image] != 'null'
-        if @user.save
-          UserMailer.registration_confirmation(@user).deliver
-        end
+      if @user.save
+        UserMailer.registration_confirmation(@user).deliver
+      	render json: @user.custom_json
+      else
+        errors = @user.errors.full_messages
+        registration_failed(errors)
       end
-    	render json: @user.custom_json
     end
+
 
     def update
       user = User.find_by(id: params[:id])
@@ -63,6 +67,14 @@ module Api::V1
 
     def update_failed
       render json: { errors: [ {detail: 'Update Failed'}]}, status: 500
+    end
+
+    def no_user_found
+      render json: { errors: [ {detail: 'User Not Found'}]}, status: 404
+    end
+
+    def registration_failed(errors)
+      render json: { errors: errors}, status: 400
     end
 
   end

@@ -1,11 +1,12 @@
 class Api::V1::BaseController < ActionController::Base
 	include ActionController::HttpAuthentication::Basic
 	include ActionController::HttpAuthentication::Token::ControllerMethods
+	include Rails::Pagination
 	before_action :require_login!
 	helper_method :user_signed_in?, :current_user
 
 	def user_signed_in?
-		current_person.present?
+		current_user.present?
 	end
 
 	def require_login!

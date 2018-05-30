@@ -1,4 +1,3 @@
-# require 'will_paginate/array'
 module Api::V1
   class GamesController < BaseController
   	# before_action :authenticate_user!, except: [:index, :create]

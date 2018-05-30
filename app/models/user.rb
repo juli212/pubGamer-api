@@ -2,6 +2,11 @@ class User < ActiveRecord::Base
   attr_accessor :password, :password_confirmation, :image
   before_create :create_confirmation_token
 
+  validates :email, :password, presence: true
+  validates :email, uniqueness: true
+  validates :password, length: { minimum: 7, message: 'Password must be at least 7 characters' }
+  # validates :bio, maximum: 300, message: 'over character limit'
+
   has_many :reviews
   has_many :venues
   has_many :user_venues
@@ -15,14 +20,14 @@ class User < ActiveRecord::Base
 
 
   def authenticated?(password)
-    # password_to_encrypt = password + ENV['SALT']
     self.email_confirmed? && self.password_hash == self.hash_password(password)
-    # self.email_confirmed? && self.password_hash == Digest::SHA1.hexdigest(password_to_encrypt)
   end
+
 
   def self.find_for_authentication(email)
     User.find_by(email: email)
   end
+
 
   def generate_auth_token
     token = SecureRandom.hex
@@ -35,17 +40,17 @@ class User < ActiveRecord::Base
     self.update_columns(auth_token: nil, token_created_at: nil)
   end
 
+
   def encrypt_password(password, confirmation)
     if password && confirmation && password == confirmation
-      # self.set_password_hash(password)
       self.password_hash = self.hash_password(password)
     end
   end
 
+
   def hash_password(pw)
     to_encrypt = pw + ENV['SALT']
     Digest::SHA1.hexdigest(to_encrypt)
-        # self.password_hash = Digest::SHA1.hexdigest(to_encrypt)
   end
 
 
@@ -56,7 +61,6 @@ class User < ActiveRecord::Base
   end
 
   def confirmation_link
-    # self.confirmation_token ? "localhost:3001/api/v1/users/confirm_email/#{self.confirmation_token}" : nil
     self.confirmation_token ? "localhost:3000/confirm_email/#{self.confirmation_token}" : nil
   end
 
@@ -96,8 +100,9 @@ class User < ActiveRecord::Base
   end
 
   def profile_image
-    self.image ? self.image.photo_file_name : nil
+    self.image ? self.image.photo.url(:small) : nil
   end
+
 
   def custom_json
     { id: self.id,

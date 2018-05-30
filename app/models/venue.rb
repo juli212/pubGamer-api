@@ -9,6 +9,14 @@ class Venue < ApplicationRecord
 	has_many :images, as: :imageable, dependent: :destroy
 	accepts_nested_attributes_for :images
 
+	validates :name, :address, :lat, :lng, :place_id, :user_id, presence: true
+	validates :address, uniqueness: true
+	validates :name, :address, length: {maximum: 255, message: 'over character limit'}
+	# validates :name, format: {
+	# 	with: /\A[\d\sa-zA-Z_\.\,\-\+\!\?]+\z/,
+	# 	message: "Invalid characters: Acceptable characters are A-Z, a-z, 0-9"
+	# }
+  # validates :bio, length: { maximum: 500 }
 
 	def num_of_ratings
 		self.reviews.where(deleted: :false).length
