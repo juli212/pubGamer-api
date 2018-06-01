@@ -6,7 +6,6 @@ class ReportMailer < ActionMailer::Base
 		@user = report.user
 		@message = report.message
 		@venue = report.venue
-		# binding.pry
 		mail(to: "pubgamerteam@gmail.com",
 			subject: "PubGamer Inaccurate Venue Report")
 	end

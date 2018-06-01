@@ -16,6 +16,7 @@ module Api::V1
 
     def create
       @user = User.new(user_params)
+      binding.pry
       @user.encrypt_password(user_params[:password], user_params[:password_confirmation])
       # @user.image = Image.new(photo: user_params[:image])
       if @user.save
@@ -40,15 +41,15 @@ module Api::V1
     end
 
 
-    def confirm_email
-      binding.pry
-      user = User.find_by(confirmation_token: params[:id])
-      # if user
-        # user.confirm_email
-      # end
-      render json: user,
-        include: ['favorites']
-    end
+    # def confirm_email
+    #   binding.pry
+    #   user = User.find_by(confirmation_token: params[:id])
+    #   # if user
+    #     # user.confirm_email
+    #   # end
+    #   render json: user,
+    #     include: ['favorites']
+    # end
 
 
     def favorite

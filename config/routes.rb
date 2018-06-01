@@ -30,9 +30,10 @@ Rails.application.routes.draw do
 
 		  resources :sessions, only: [:create] do
         delete :destroy, on: :collection
+        get :current, on: :collection
       end
 
-
+      resources :contacts, only: [:create]
 
 		  resources :confirm_email, only: [:show], path: '/users/confirm_email'
 
