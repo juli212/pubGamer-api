@@ -12,12 +12,6 @@ gem 'rails', '~> 5.1.4'
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-# gem 'jbuilder', '~> 2.5'
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 3.0'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
 
 gem 'pry-rails'
 
@@ -27,8 +21,6 @@ gem 'api-pagination'
 
 gem 'figaro'
 
-# gem 'paperclip', '~> 4.2'
-# gem "aws-sdk", "~> 3"
 gem "paperclip", "~> 5.0.0"
 gem "aws-sdk", "~> 2.3"
 
