@@ -2,7 +2,6 @@ class Venue < ApplicationRecord
 	belongs_to :user
 	belongs_to :neighborhood, required: false
 	
-	has_many :events
   has_many :reviews
 	has_many :venue_games
 	has_many :games, through: :venue_games
