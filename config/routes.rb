@@ -17,14 +17,12 @@ Rails.application.routes.draw do
       # end
 
       resources :games, only: [:index, :create]
-      resources :neighborhoods, only: [:create, :index]
-		  
 
 		  resources :users, except: [:new, :index, :destroy] do
         resources :favorites, only: [:index]
         put :add_favorite
         put :remove_favorite
-        # get :favorites, on: :collection
+        # get :favorites, on: :collection #should this be a post/destroy to 1 favorites route? or two separate routes like ^
         # get :current, on: :collection # /users/current | users#current
 		  end
 
