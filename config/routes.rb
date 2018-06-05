@@ -20,8 +20,8 @@ Rails.application.routes.draw do
 
 		  resources :users, except: [:new, :index, :destroy] do
         resources :favorites, only: [:index]
-        put :add_favorite
-        put :remove_favorite
+        # put :add_favorite
+        # put :remove_favorite
         # get :favorites, on: :collection #should this be a post/destroy to 1 favorites route? or two separate routes like ^
         # get :current, on: :collection # /users/current | users#current
 		  end
@@ -30,6 +30,8 @@ Rails.application.routes.draw do
         delete :destroy, on: :collection
         get :current, on: :collection
       end
+
+      resources :favorites, only: [:index, :create, :destroy]
 
       resources :contacts, only: [:create]
 

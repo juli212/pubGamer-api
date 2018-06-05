@@ -48,7 +48,8 @@ module Api::V1
 
     def authorized_user(user)
       render json: user,
-        only: [:id, :auth_token]
+        only: [:id, :auth_token],
+        include: {}
     end
 
   end

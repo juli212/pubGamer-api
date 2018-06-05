@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
   end
 
   def confirmation_link
-    self.confirmation_token ? "localhost:3000/confirm_email/#{self.confirmation_token}" : nil
+    self.confirmation_token ? "pubgamr.herokuapp.com/confirm_email/#{self.confirmation_token}" : nil
   end
 
   # private
