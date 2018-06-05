@@ -6,6 +6,7 @@ module Api::V1
 
 
     def index 
+      # venues = Venue.all
     	venues = Venue.where(filtering_params)
       # binding.pry
       if game_array_params[:games] && query_params[:query]
@@ -99,16 +100,16 @@ module Api::V1
 		end
   
   	def filtering_params
-  		params.permit(:name, :id, :neighborhood_ids => [])
+  		params.permit(:name, :id)
   	end
 
   	def game_array_params
   		params.permit(:games => [])
   	end
 
-  	def game_params
-  		params.permit(:games)
-  	end
+  	# def game_params
+  	# 	params.permit(:games)
+  	# end
 
     def query_params
       params.permit(:query)

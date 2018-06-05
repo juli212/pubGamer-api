@@ -1,6 +1,5 @@
 class Venue < ApplicationRecord
 	belongs_to :user
-	belongs_to :neighborhood, required: false
 	
   has_many :reviews
 	has_many :venue_games
@@ -63,13 +62,13 @@ class Venue < ApplicationRecord
 
 	def self.multi_word_search(term)
 		words = term.split.join(' | ')
-		self.joins(:games).joins(:neighborhood).where("to_tsvector(venues.name || ' ' || venues.address || ' ' || neighborhoods.name || ' ' || games.name) @@ to_tsquery('#{words}')")		
+		self.joins(:games).where("to_tsvector(venues.name || ' ' || venues.address || ' ' || games.name) @@ to_tsquery('#{words}')")		
 	end
 
 
 	def self.single_phrase_search(term)
 		# binding.pry
-		self.joins(:games).joins(:neighborhood).where("venues.name ILIKE :term OR venues.address ILIKE :term OR games.name ILIKE :term OR neighborhoods.name ILIKE :term", term: "%#{term.downcase}%").uniq
+		self.joins(:games).where("venues.name ILIKE :term OR venues.address ILIKE :term OR games.name ILIKE :term", term: "%#{term.downcase}%").uniq
 	end
 
 
