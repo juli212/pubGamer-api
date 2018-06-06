@@ -2,20 +2,17 @@ require 'will_paginate/array'
 module Api::V1
   class VenuesController < BaseController
   	# before_action :authenticate_user!, except: [:index, :show, :create, :new]
-  	skip_before_action :require_login!, only: [:index, :create, :show]
+  	skip_before_action :require_login!, only: [:index, :show]
 
 
     def index 
-      # venues = Venue.all
     	venues = Venue.where(filtering_params)
-      # binding.pry
       if game_array_params[:games] && query_params[:query]
         venues = venues.search_and_filter(game_array_params[:games], query_params[:query])
       else
         venues = venues.game_array_filter(game_array_params[:games]) if game_array_params[:games]
         venues = venues.full_search(query_params[:query]) if query_params[:query]
       end
-      # binding.pry
       if !map_bounds_params.empty?
         bounds = map_bounds_params
 
@@ -27,30 +24,7 @@ module Api::V1
         }
       end
       venues = venues.sort_by { |v| -v.avg_rating }
-      # i = 12
-      # current_page = params[:page] ? params[:page].to_i : 1
-      # pages = venues.length % i === 0 ? venues.length / i : (venues.length / i) + 1
-      # if current_page === 1 
-      #   prev_page = nil
-      # else
-      #   prev_page = current_page - 1
-      # end
-      # if current_page === pages
-      #   next_page = nil
-      # else
-      #   next_page = current_page + 1
-      # end
-      # paging = {
-      #   first: "/venues?page=1",
-      #   prev: prev_page ? "/venues?page=#{prev_page}" : nil,
-      #   total_pages: pages.to_s,
-      #   current_page: current_page.to_s,
-      #   next: next_page ? "/venues?page=#{next_page}" : nil,
-      #   last: "/venues?page=#{pages}"
-      # }
-      # binding.pry
       render json: custom_json_list(venues)
-      # render json: custom_json_list(venues, paging, i)
     end
 
 
@@ -68,16 +42,13 @@ module Api::V1
 
 	  def create
 	  	venue = Venue.new(venue_params)
-      # binding.pry
 	  	if venue.save
 	  		venue.games << Game.find(game_array_params[:games]) if game_array_params[:games]
 		  	render json: venue.custom_json
       elsif Venue.find_by(name: venue.name)
-        # binding.pry
         venue = Venue.find_by(name: venue.name)
         duplicate_venue_attempt(venue.id)
       else
-        binding.pry
         errors = venue.errors
         venue_create_failed
       end
@@ -107,10 +78,6 @@ module Api::V1
   		params.permit(:games => [])
   	end
 
-  	# def game_params
-  	# 	params.permit(:games)
-  	# end
-
     def query_params
       params.permit(:query)
     end
@@ -119,14 +86,11 @@ module Api::V1
       params.permit(:lat_min, :lat_max, :lng_min, :lng_max)
     end
 
-    # def custom_json_list(venues, paging, per_page)
     def custom_json_list(venues) 
       list = venues.map do |venue|
         venue.custom_json
       end
       return list
-      # venues = paginate list, per_page: per_page
-      # {venues: venues, paging: paging}
     end
 
     def duplicate_venue_attempt(id)

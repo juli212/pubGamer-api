@@ -67,7 +67,6 @@ class Venue < ApplicationRecord
 
 
 	def self.single_phrase_search(term)
-		# binding.pry
 		self.joins(:games).where("venues.name ILIKE :term OR venues.address ILIKE :term OR games.name ILIKE :term", term: "%#{term.downcase}%").uniq
 	end
 
