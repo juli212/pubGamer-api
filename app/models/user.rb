@@ -64,8 +64,6 @@ class User < ActiveRecord::Base
     self.confirmation_token ? "pubgamr.herokuapp.com/confirm_email/#{self.confirmation_token}" : nil
   end
 
-  # private
-
   def create_confirmation_token
     if !self.confirmation_token?
       self.confirmation_token = SecureRandom.urlsafe_base64.to_s
@@ -108,6 +106,7 @@ class User < ActiveRecord::Base
     { id: self.id,
       name: self.name,
       bio: self.bio,
+      birthday: self.birthday,
       reviews: self.num_of_reviews,
       venues_added: self.num_venues_added,
       profile_image: self.profile_image,
@@ -115,6 +114,14 @@ class User < ActiveRecord::Base
       num_of_favorites: self.favorites.length,
       num_of_ratings: self.num_of_reviews,
       avg_rating: self.avg_review_rating
+    }
+  end
+
+  def edit_json
+    { name: self.name,
+      bio: self.bio,
+      birthday: self.birthday,
+      image: self.profile_image,
     }
   end
 end
