@@ -20,8 +20,7 @@ module Api::V1
     end
 
 	  def create
-	  	# binding.pry
-	  	game = Game.find_or_create_by(game_params)
+	  	game = Game.find_or_create_by(name: game_params[:name].downcase)
 	  	if game.save
 		  	render json: game,
 		  		only: [:name, :id]
