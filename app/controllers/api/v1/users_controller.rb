@@ -16,7 +16,6 @@ module Api::V1
 
     def create
       @user = User.new(user_params)
-      binding.pry
       @user.encrypt_password(user_params[:password], user_params[:password_confirmation])
       if @user.save
         UserMailer.registration_confirmation(@user).deliver
