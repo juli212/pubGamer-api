@@ -64,14 +64,39 @@ class User < ActiveRecord::Base
     self.confirmation_token ? "pubgamr.herokuapp.com/confirm_email/#{self.confirmation_token}" : nil
   end
 
+  def reset_password_link
+    self.reset_password_token ? "localhost:3000/reset_password/#{self.reset_password_token}" : nil
+    # self.reset_password_token ? "pubgamr.herokuapp.com/reset_password/#{self.reset_password_token}" : nil
+  end
+
   def create_confirmation_token
     if !self.confirmation_token?
       self.confirmation_token = SecureRandom.urlsafe_base64.to_s
     end
   end
 
+  def generate_reset_password_token
+    SecureRandom.urlsafe_base64.to_s
+  end
+
   def email_confirmed?
     !!self.email_confirmed
+  end
+
+  def generate_password_token!
+    self.reset_password_token = generate_reset_password_token
+    self.reset_password_sent_at = Time.now.utc
+    save!(validate: false)
+  end
+
+  def password_token_valid?
+    (self.reset_password_sent_at + 4.hours) > Time.now.utc
+  end
+
+  def reset_password!(password, confirmation)
+    self.reset_password_token = nil
+    self.encrypt_password(password, confirmation)
+    save!(validate: false)
   end
 
   def num_of_reviews

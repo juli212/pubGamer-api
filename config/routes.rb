@@ -27,6 +27,10 @@ Rails.application.routes.draw do
         get :current, on: :collection
       end
 
+      post 'passwords/forgot', to: 'passwords#forgot'
+      post 'passwords/reset', to: 'passwords#reset'
+      put  'passwords/update', to: 'passwords#update'
+
       resources :favorites, only: [:index, :create, :destroy]
 
       resources :contacts, only: [:create]

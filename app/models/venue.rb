@@ -5,6 +5,8 @@ class Venue < ApplicationRecord
 	has_many :venue_games
 	has_many :games, through: :venue_games
 	has_many :images, as: :imageable, dependent: :destroy
+	has_many :user_venues
+  has_many :favorited_by, through: :user_venues, source: :user
 	has_many :reports
 	accepts_nested_attributes_for :images
 
@@ -92,7 +94,9 @@ class Venue < ApplicationRecord
       lng: self.lng,
       avg_rating: self.avg_rating,
       games: self.games_for_json,
-      num_of_ratings: self.reviews.length
+      num_of_ratings: self.reviews.length,
+      favorites: self.favorited_by.length,
+      added: self.created_at
     }
   end
 
