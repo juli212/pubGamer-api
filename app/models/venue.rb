@@ -96,7 +96,7 @@ class Venue < ApplicationRecord
       games: self.games_for_json,
       num_of_ratings: self.reviews.length,
       favorites: self.favorited_by.length,
-      added: self.created_at
+      added: self.created_at.to_date
     }
   end
 
