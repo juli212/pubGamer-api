@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   has_many :user_events
   has_many :events, through: :user_events
   has_many :reports
+  has_many :contacts
 
   has_one :image, as: :imageable, dependent: :destroy
   accepts_nested_attributes_for :image

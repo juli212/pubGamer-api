@@ -5,6 +5,7 @@ module Api::V1
 
   	def create
   		user = current_user
+      binding.pry 
   		contact = Contact.new(contact_params)
  			contact.user = user if user
   		if contact.save
