@@ -1,12 +1,13 @@
 module Api::V1
   class UsersController < BaseController
     include ActionController::HttpAuthentication::Token::ControllerMethods
-    skip_before_action :require_login!, only: [:create, :update]
+    skip_before_action :require_login!, only: [:show, :create, :update]
 
     def show
       user = User.find_by(id: params[:id])
       if user
-        render json: user.custom_json
+        render json: user
+        # render json: user.custom_json
       else
         no_user_found
       end
@@ -19,7 +20,7 @@ module Api::V1
       @user.encrypt_password(user_params[:password], user_params[:password_confirmation])
       if @user.save
         UserMailer.registration_confirmation(@user).deliver
-      	render json: @user.custom_json
+      	render json: @user
       else
         errors = @user.errors.full_messages
         registration_failed(errors)
@@ -35,7 +36,7 @@ module Api::V1
         user.update_attributes(update_params)
         user.build_image(photo: update_params[:image]) if update_params[:image] && update_params[:image] != 'null'
         if user.save
-          render json: user.custom_json
+          render json: user
         else
           update_failed
         end

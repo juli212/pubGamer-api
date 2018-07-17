@@ -43,8 +43,6 @@ module Api::V1
 				return render json: {error: 'Password not present'}, status: :unprocessable_entity
 			end
 
-			binding.pry
-
 			token = update_password_params[:token].to_s
 			user = User.find_by(reset_password_token: token)
 
