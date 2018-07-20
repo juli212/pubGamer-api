@@ -1,21 +1,26 @@
 require 'will_paginate/array'
 module Api::V1
   class VenuesController < BaseController
-  	# before_action :authenticate_user!, except: [:index, :show, :create, :new]
   	skip_before_action :require_login!, only: [:index, :show]
 
 
     def index 
-    	venues = Venue.where(filtering_params)
-      if game_array_params[:games] && query_params[:query]
-        venues = venues.search_and_filter(game_array_params[:games], query_params[:query])
-      else
-        venues = venues.game_array_filter(game_array_params[:games]) if game_array_params[:games]
-        venues = venues.full_search(query_params[:query]) if query_params[:query]
-      end
-      if !map_bounds_params.empty?
-        bounds = map_bounds_params
+      venues = Venue.with_games(game_array_params[:games]).query(query_params[:query])
 
+      venues = case sort_param[:order]
+        when 'rating'
+          venues.by_avg_rating
+        when 'reviews'
+          venues.by_reviews
+        when 'favorites'
+          venues.by_favorites
+        when 'newest'
+          venues.by_date
+        else
+          venues
+      end
+
+      if !map_bounds_params.empty?
         venues = venues.select { |venue| venue.inLatLngBounds(
           bounds[:lat_min],
           bounds[:lat_max],
@@ -23,14 +28,21 @@ module Api::V1
           bounds[:lng_max])
         }
       end
-      venues = venues.sort_by { |v| -v.avg_rating }
-      render json: custom_json_list(venues)
+
+      # binding.pry
+
+      if params[:reverse] === 'true'
+        render json: venues.uniq.reverse
+      else
+      # venues = venues.sort_by { |v| -v.avg_rating }
+        render json: venues.uniq
+      end
     end
 
 
     def show
     	venue = Venue.find_by(id: params[:id])
-    	render json: venue.custom_json
+      render json: venue
     end
 
 
@@ -44,7 +56,8 @@ module Api::V1
 	  	venue = Venue.new(venue_params)
 	  	if venue.save
 	  		venue.games << Game.find(game_array_params[:games]) if game_array_params[:games]
-		  	render json: venue.custom_json
+        render json: venue
+		  	# render json: venue.custom_json
       elsif Venue.find_by(name: venue.name)
         venue = Venue.find_by(name: venue.name)
         duplicate_venue_attempt(venue.id)
@@ -66,10 +79,32 @@ module Api::V1
 
 		private
 
+    def bounds
+      return map_bounds_params
+    end
+
+    # def sorting
+    #   param = sort_param[:order]
+    #   case param
+    #   when 'avg_rating'
+
+    #   when 'ratings'
+
+    #   when 'date'
+    #     'created_at'
+    #   when 'favorites'
+    #     ''
+    #   end
+    # end
+
 	  def venue_params
 	    params.require(:venue).permit(:name, :address, :lat, :lng, :neighborhood, :image, :place_id)
 		end
   
+    def sort_param
+      params.permit(:order)
+    end
+
   	def filtering_params
   		params.permit(:name, :id)
   	end

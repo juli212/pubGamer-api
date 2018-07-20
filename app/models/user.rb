@@ -104,6 +104,11 @@ class User < ActiveRecord::Base
     self.reviews.length
   end
 
+  def num_of_favorites
+    self.favorites.length
+  end
+
+
   def avg_review_rating
     avg = 0
     if self.num_of_reviews > 0

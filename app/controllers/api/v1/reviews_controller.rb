@@ -5,12 +5,13 @@ module Api::V1
 
     def index
     	reviews = Review.where(venue_id: params[:venue_id])
-      render json: reviews,
-      	only: [:id, :content, :rating, :day, :user_id],
-      	methods: [:numerical_date],
-      	include: {
-      		vibes: { only: [:name, :id]}
-      	}
+      render json: reviews
+      # render json: reviews,
+      # 	only: [:id, :content, :rating, :day, :user_id],
+      # 	methods: [:numerical_date],
+      # 	include: {
+      # 		vibes: { only: [:name, :id]}
+      # 	}
     end
 
 	  def create
@@ -22,12 +23,13 @@ module Api::V1
 	  			review.vibes << Vibe.find_by(name: v)
 	  		end
 	  	end
-	  	render json: review,
-	  		only: [:id, :content, :rating, :day, :user_id],
-	  		methods: [:numerical_date],
-	  		include: {
-	  			vibes: { only: [:name, :id]}
-	  		}
+	  	render json: review
+	  	# render json: review,
+	  	# 	only: [:id, :content, :rating, :day, :user_id],
+	  	# 	methods: [:numerical_date],
+	  	# 	include: {
+	  	# 		vibes: { only: [:name, :id]}
+	  	# 	}
 	  end
 
 		private

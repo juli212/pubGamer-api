@@ -1,5 +1,6 @@
 module Api::V1
   class SessionsController < BaseController
+    include ActionController::Serialization
   	skip_before_action :require_login!, only: [:create]
 
   	def create
@@ -47,9 +48,7 @@ module Api::V1
     end
 
     def authorized_user(user)
-      render json: user,
-        only: [:id, :auth_token],
-        include: {}
+      render json: user, serializer: SessionSerializer
     end
 
   end

@@ -1,14 +1,14 @@
 module Api::V1
   class FavoritesController < BaseController
     include ActionController::HttpAuthentication::Token::ControllerMethods
-    # skip_before_action :require_login!, only: [:index]
+    skip_before_action :require_login!, only: [:index]
 
 
 		def index
 			if params[:user_id]
 				user = User.find_by(id: params[:user_id])
 				favorites = user.favorites
-				render json: custom_favorites_json(favorites)
+				render json: favorites
 			else
 				user = current_user
 				favorites = user.favorites
