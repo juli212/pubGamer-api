@@ -5,7 +5,20 @@ module Api::V1
 
 
     def index 
-      venues = Venue.with_games(game_array_params[:games]).query(query_params[:query]).uniq
+      venues = Venue.with_games(game_array_params[:games]).query(query_params[:query])
+
+      venues = case sort_param[:order]
+        when 'rating'
+          venues.by_avg_rating
+        when 'reviews'
+          venues.by_reviews
+        when 'favorites'
+          venues.by_favorites
+        when 'newest'
+          venues.by_date
+        else
+          venues
+      end
 
       if !map_bounds_params.empty?
         venues = venues.select { |venue| venue.inLatLngBounds(
@@ -15,8 +28,15 @@ module Api::V1
           bounds[:lng_max])
         }
       end
-      venues = venues.sort_by { |v| -v.avg_rating }
-      render json: venues
+
+      # binding.pry
+
+      if params[:reverse] === 'true'
+        render json: venues.uniq.reverse
+      else
+      # venues = venues.sort_by { |v| -v.avg_rating }
+        render json: venues.uniq
+      end
     end
 
 
@@ -63,10 +83,28 @@ module Api::V1
       return map_bounds_params
     end
 
+    # def sorting
+    #   param = sort_param[:order]
+    #   case param
+    #   when 'avg_rating'
+
+    #   when 'ratings'
+
+    #   when 'date'
+    #     'created_at'
+    #   when 'favorites'
+    #     ''
+    #   end
+    # end
+
 	  def venue_params
 	    params.require(:venue).permit(:name, :address, :lat, :lng, :neighborhood, :image, :place_id)
 		end
   
+    def sort_param
+      params.permit(:order)
+    end
+
   	def filtering_params
   		params.permit(:name, :id)
   	end

@@ -1,4 +1,6 @@
 class Venue < ApplicationRecord
+  # include Filterable
+
 	belongs_to :user
 	
   has_many :reviews
@@ -18,6 +20,51 @@ class Venue < ApplicationRecord
 	# 	message: "Invalid characters: Acceptable characters are A-Z, a-z, 0-9"
 	# }
   # validates :bio, length: { maximum: 500 }
+
+  scope :with_games, ->(name) {
+  	joins(:games).where(games: {name: name}) if name.present?
+  }
+
+  scope :query, ->(query) {
+  	joins(:games).where("venues.name ILIKE :term OR venues.address ILIKE :term OR games.name ILIKE :term OR to_tsvector(venues.name || ' ' || venues.address || ' ' || games.name) @@ to_tsquery('#{query.split.join(' | ')}')", term: "%#{query.downcase}%")	if query.present?
+  }
+
+  scope :by_avg_rating, -> {
+		left_joins(:reviews).group('venues.id').order('AVG(reviews.rating) desc NULLS LAST')
+  }
+
+  scope :by_reviews, -> {
+  	left_joins(:reviews).group('venues.id').order('COUNT(reviews.venue_id) desc')
+  }
+
+  scope :by_favorites, -> {
+  	left_joins(:user_venues).group('venues.id').order('COUNT(user_venues.venue_id) desc')
+  }
+
+  scope :by_date, -> {
+  	order(:created_at)
+  }
+
+  # scope :inside_lat, ->(bounds) {
+  # 	where(float_lat: bounds[:lat_min].to_f..bounds[:lat_max].to_f) if bounds.present?
+  # }
+
+  # scope :inside_lng, ->(bounds) {
+  # 	where(float_lng: bounds[:lng_min].to_f..bounds[:lng_max].to_f) if bounds.present?
+  # }
+
+  # scope :min_lat, ->(min) { where(lat > min) if min.present? }
+  # scope :max_lat, ->(max) { where(lat < max) if max.present? }
+  # scope :min_lng, ->(min) { where(lng > min) if min.present? }
+  # scope :max_lng, ->(max) { where(lng < max) if max.present? }
+
+  def float_lat
+  	self.lat.to_f
+  end
+
+  def float_lng
+  	self.lng.to_f
+  end
 
 	def num_of_ratings
 		self.reviews.where(deleted: :false).length
@@ -107,6 +154,14 @@ class Venue < ApplicationRecord
     	}
   	end
   	games
+  end
+
+  def added
+  	return self.created_at.to_date
+  end
+
+  def is_favorite_of
+  	return self.favorited_by.length
   end
 
   def custom_json_list(venues)
